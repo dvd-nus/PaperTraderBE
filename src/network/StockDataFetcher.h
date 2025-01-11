@@ -7,7 +7,7 @@
 
 class StockDataFetcher {
 public:
-    StockDataFetcher();
+    StockDataFetcher(const char*);
     ~StockDataFetcher();
 
     // Fetch stock data for a given ticker symbol
@@ -16,6 +16,8 @@ public:
 private:
     // Helper function to handle the response
     static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp);
+
+    const char* apiKey;
 
     CURL* curl;
 };

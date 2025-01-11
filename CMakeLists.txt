@@ -21,6 +21,7 @@ set(SOURCES
     src/network/StockDataFetcher.cpp
     src/core/Portfolio.cpp
     src/core/Stock.cpp
+    src/utils/envparser.cpp
 )
 
 # Add header files for clarity (optional, not required for compilation)
@@ -41,4 +42,14 @@ target_link_libraries(PaperTraderBackend
     wldap32
     advapi32
     normaliz
+)
+
+# Path to your .env file
+set(ENV_FILE "${CMAKE_SOURCE_DIR}/.env")
+
+# Ensure .env is copied to the output directory
+add_custom_command(
+    TARGET PaperTraderBackend POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${ENV_FILE} $<TARGET_FILE_DIR:PaperTraderBackend>
 )

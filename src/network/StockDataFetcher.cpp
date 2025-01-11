@@ -1,9 +1,10 @@
 #include "StockDataFetcher.h"
 #include <iostream>
 
-StockDataFetcher::StockDataFetcher() {
+StockDataFetcher::StockDataFetcher(const char* apiKey) {
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
+	this->apiKey = apiKey;
 }
 
 StockDataFetcher::~StockDataFetcher() {
@@ -23,8 +24,14 @@ nlohmann::json StockDataFetcher::fetchStockData(const std::string& ticker) {
         throw std::runtime_error("Curl initialization failed.");
     }
 
+    // Get the API key from the environment variable
+    const char* apiKey = std::getenv("ALPHA_VANTAGE_API_KEY");
+    if (!apiKey) {
+        throw std::runtime_error("API key not found in environment variables.");
+    }
+
     // Define the URL (this example uses Alpha Vantage; modify for Google or others)
-    std::string url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + ticker + "&interval=5min&apikey=YOUR_API_KEY";
+    std::string url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + ticker + "&apikey=" + std::string(apiKey);
     // check out https://site.financialmodelingprep.com/developer/docs/realtime-stock-quote-api
 
     std::string response_string;
